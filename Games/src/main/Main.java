@@ -17,7 +17,7 @@ class Main {
         saveGame("D:\\Обучение Нетология\\Директории\\NetologyHomework\\" +
                 "src\\homeworkFile\\Games\\saveGames\\save3.dat", save3);
 
-     ArrayList<String> arrayList = new ArrayList<>();
+        ArrayList<String> arrayList = new ArrayList<>();
 
         arrayList.add("D:\\Обучение Нетология\\Директории\\NetologyHomework\\" +
                 "src\\homeworkFile\\Games\\saveGames\\save1.dat");
@@ -36,14 +36,18 @@ class Main {
         deleteFile("D:\\Обучение Нетология\\Директории\\NetologyHomework\\" +
                 "src\\homeworkFile\\Games\\saveGames\\save3.dat");
 
-//        String[] st = new String[]{"D:\\Обучение Нетология\\Директории\\NetologyHomework\\" +
-//                "src\\homeworkFile\\Games\\saveGames\\save1.dat",
-//                "D:\\Обучение Нетология\\Директории\\NetologyHomework\\" +
-//                        "src\\homeworkFile\\Games\\saveGames\\save2.dat",
-//                "D:\\Обучение Нетология\\Директории\\NetologyHomework\\" +
-//                        "src\\homeworkFile\\Games\\saveGames\\save3.dat"};
-//        zipFiles1("D:\\Обучение Нетология\\Директории\\NetologyHomework\\" +
-//                "src\\homeworkFile\\Games\\saveGames\\zip.zip", st);
+        openZip("D:\\Обучение Нетология\\Директории\\NetologyHomework\\" +
+                        "src\\homeworkFile\\Games\\saveGames\\zip.zip",
+                "D:\\Обучение Нетология\\Директории\\NetologyHomework\\" +
+                        "src\\homeworkFile\\Games\\saveGames\\");
+
+        System.out.println(openProgress("D:\\Обучение Нетология\\Директории\\NetologyHomework\\" +
+                "src\\homeworkFile\\Games\\saveGames\\save1.dat"));
+        System.out.println(openProgress("D:\\Обучение Нетология\\Директории\\NetologyHomework\\" +
+                "src\\homeworkFile\\Games\\saveGames\\save2.dat"));
+        System.out.println(openProgress("D:\\Обучение Нетология\\Директории\\NetologyHomework\\" +
+                "src\\homeworkFile\\Games\\saveGames\\save3.dat"));
+
     }
 
     public static void saveGame(String way, GameProgress save) {
@@ -58,8 +62,9 @@ class Main {
     public static void zipFiles(String wayZip, ArrayList<String> file) {
         try (ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(wayZip))) {
             for (String way : file) {
-                try (FileInputStream fis = new FileInputStream(way)) {
-                    ZipEntry entry = new ZipEntry(way);
+                File input = new File(way);
+                try (FileInputStream fis = new FileInputStream(input)) {
+                    ZipEntry entry = new ZipEntry(input.getName());
                     zout.putNextEntry(entry);
                     byte[] buffer = new byte[fis.available()];
                     fis.read(buffer);
@@ -77,20 +82,33 @@ class Main {
         file1.delete();
     }
 
-//    public static void zipFiles1(String wayZip, String[] file) {
-//        try (ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(wayZip))) {
-//            for (int i = 0; i < file.length; i++) {
-//                try (FileInputStream fis = new FileInputStream(file[i])) {
-//                    ZipEntry entry = new ZipEntry(file[i]);
-//                    zout.putNextEntry(entry);
-//                    byte[] buffer = new byte[fis.available()];
-//                    fis.read(buffer);
-//                    zout.write(buffer);
-//                    zout.closeEntry();
-//                }
-//            }
-//        } catch (IOException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//    }
+    public static void openZip(String willOpenZip, String way) {
+        try (ZipInputStream zin = new ZipInputStream(new FileInputStream(willOpenZip))) {
+            ZipEntry entry;
+            String name;
+            while ((entry = zin.getNextEntry()) != null) {
+                name = entry.getName();
+                FileOutputStream fout = new FileOutputStream(way + name);
+                for (int c = zin.read(); c != -1; c = zin.read()) {
+                    fout.write(c);
+                }
+                fout.flush();
+                zin.closeEntry();
+                fout.close();
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public static GameProgress openProgress(String way) {
+        GameProgress gameProgress = null;
+        try (FileInputStream fis = new FileInputStream(way);
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
+            gameProgress = (GameProgress) ois.readObject();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        return gameProgress;
+    }
 }

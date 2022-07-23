@@ -19,22 +19,18 @@ public class Main {
                 "homeworkFile\\Games\\saveGames");
         File temp = new File("D:\\Обучение Нетология\\Директории\\NetologyHomework\\src\\" +
                 "homeworkFile\\Games\\temp");
-        File main = new File("D:\\Обучение Нетология\\Директории\\NetologyHomework\\src\\" +
-                "homeworkFile\\Games\\src\\main");
-        File test = new File("D:\\Обучение Нетология\\Директории\\NetologyHomework\\src\\" +
-                "homeworkFile\\Games\\src\\test");
-        File mainJava = new File("D:\\Обучение Нетология\\Директории\\NetologyHomework\\src\\" +
-                "homeworkFile\\Games\\src\\main\\Main.java");
-        File utilsJava = new File("D:\\Обучение Нетология\\Директории\\NetologyHomework\\src\\" +
-                "homeworkFile\\Games\\src\\main\\Utils.java");
-        File drawables = new File("D:\\Обучение Нетология\\Директории\\NetologyHomework\\src\\" +
-                "homeworkFile\\Games\\res\\drawables");
-        File vectors = new File("D:\\Обучение Нетология\\Директории\\NetologyHomework\\src\\" +
-                "homeworkFile\\Games\\res\\vectors");
-        File icons = new File("D:\\Обучение Нетология\\Директории\\NetologyHomework\\src\\" +
-                "homeworkFile\\Games\\res\\icons");
-        File tempTxt = new File("D:\\Обучение Нетология\\Директории\\NetologyHomework\\src\\" +
-                "homeworkFile\\Games\\temp\\temp.txt");
+
+        File main = new File(src, "main");
+        File test = new File(src, "test");
+
+        File mainJava = new File(main, "Main.java");
+        File utilsJava = new File(main, "Utils.java");
+
+        File drawables = new File(res, "drawables");
+        File vectors = new File(res, "vectors");
+        File icons = new File(res, "icons");
+
+        File tempTxt = new File(temp, "temp.txt");
 
         newDirectory(src, history);
         newDirectory(res, history);
@@ -52,12 +48,10 @@ public class Main {
         try (FileWriter writer = new FileWriter(tempTxt)) {
             writer.write(String.valueOf(history));
             writer.flush();
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
 
-//        System.out.println(history);
     }
 
     static void newDirectory(File file, StringBuilder sb) {
