@@ -4,12 +4,17 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
 
         StringBuilder history = new StringBuilder();
+
+        List<File> direc = new ArrayList<>();
+        List<File> files = new ArrayList<>();
 
         File src = new File("D:\\Обучение Нетология\\Директории\\NetologyHomework\\src\\" +
                 "homeworkFile\\Games\\src");
@@ -32,18 +37,25 @@ public class Main {
 
         File tempTxt = new File(temp, "temp.txt");
 
-        newDirectory(src, history);
-        newDirectory(res, history);
-        newDirectory(saveGames, history);
-        newDirectory(temp, history);
-        newDirectory(main, history);
-        newDirectory(test, history);
-        newFile(mainJava, history);
-        newFile(utilsJava, history);
-        newDirectory(drawables, history);
-        newDirectory(vectors, history);
-        newDirectory(icons, history);
-        newFile(tempTxt, history);
+        direc.add(src);
+        direc.add(res);
+        direc.add(saveGames);
+        direc.add(temp);
+        direc.add(main);
+        direc.add(test);
+        direc.add(drawables);
+        direc.add(vectors);
+        direc.add(icons);
+
+        files.add(mainJava);
+        files.add(utilsJava);
+
+        for (File file : direc) {
+            newDirectory(file, history);
+        }
+        for (File file : files) {
+            newDirectory(file, history);
+        }
 
         try (FileWriter writer = new FileWriter(tempTxt)) {
             writer.write(String.valueOf(history));
